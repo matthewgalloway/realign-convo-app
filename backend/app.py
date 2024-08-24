@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
@@ -11,7 +11,7 @@ import os
 import logging
 
 app = Flask(__name__)
-CORS(app)  # This enables CORS for all routes
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:8080"}})
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -24,6 +24,11 @@ if not openai_api_key:
 
 @app.route('/api/generate-questions', methods=['POST'])
 def generate_questions():
+    print(f"Request method: {request.method}")
+    print(f"Request headers: {request.headers}")
+    print(f"Request data: {request.data}")
+    if request.method == "OPTIONS":
+        return _build_cors_preflight_response()
     try:
         data = request.json
         if not data:
@@ -61,6 +66,8 @@ def generate_questions():
     except Exception as e:
         logger.error(f"An error occurred: {str(e)}", exc_info=True)
         return jsonify({"error": str(e)}), 500
+    
+
 
 @app.route('/api/generate-speech', methods=['POST'])
 def generate_speech():
