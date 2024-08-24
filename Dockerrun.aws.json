@@ -1,0 +1,35 @@
+{
+    "AWSEBDockerrunVersion": 3,
+    "containerDefinitions": [
+      {
+        "name": "frontend",
+        "image": "632365357478.dkr.ecr.us-east-1.amazonaws.com/my-frontend:latest",
+        "essential": true,
+        "memory": 256,
+        "portMappings": [
+          {
+            "hostPort": 80,
+            "containerPort": 80
+          }
+        ]
+      },
+      {
+        "name": "backend",
+        "image": "632365357478.dkr.ecr.us-east-1.amazonaws.com/my-backend:latest",
+        "essential": true,
+        "memory": 256,
+        "portMappings": [
+          {
+            "hostPort": 5000,
+            "containerPort": 5000
+          }
+        ],
+        "environment": [
+          {
+            "name": "OPENAI_API_KEY",
+            "value": "your_openai_api_key_here"
+          }
+        ]
+      }
+    ]
+  }
